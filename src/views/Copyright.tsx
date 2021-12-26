@@ -9,7 +9,7 @@ function Copyright() {
   return (
     <Typography variant="body2" color="text.secondary" align="center">
       {'Copyright © '}
-      <Link color="inherit" href="https://github.com/albul-k" target="_blank">
+      <Link color="inherit" href="https://github.com/albul-k/wb-price" target="_blank">
         <GitHubIcon />
         albul-k
       </Link>{' '}
@@ -26,10 +26,7 @@ export default function StickyFooter() {
       sx={{
         py: 2,
         mt: 'auto',
-        backgroundColor: (theme) =>
-          theme.palette.mode === 'light'
-            ? theme.palette.grey[200]
-            : theme.palette.grey[800],
+        backgroundColor: (theme) => theme.palette.grey[200],
       }}
     >
       <Copyright />
