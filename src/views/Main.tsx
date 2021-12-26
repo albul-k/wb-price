@@ -4,9 +4,8 @@ import Typography from '@mui/material/Typography';
 import Box from '@mui/material/Box';
 import MenuItem from '@mui/material/MenuItem';
 import { MoneyFormatInput, PercentFormat } from '../components/numberFormats';
-import { TextFieldCustom, TextFieldCustomOutput } from '../components/components';
+import { TextFieldCustom, TextFieldCustomOutput, HelpOutlineIconCustom } from '../components/components';
 import Tooltip from '@mui/material/Tooltip';
-import HelpOutlineIcon from '@mui/icons-material/HelpOutline';
 import InputAdornment from '@mui/material/InputAdornment';
 
 
@@ -158,7 +157,7 @@ export default function Main() {
                 <Tooltip
                   title="Укажите коэффициент гарантированного вознаграждения по договору"
                 >
-                  <HelpOutlineIcon sx={{ color: 'action.active', mr: 1, my: 0.5 }} />
+                  <HelpOutlineIconCustom />
                 </Tooltip>
               </InputAdornment>
             ),
@@ -187,9 +186,9 @@ export default function Main() {
             endAdornment: (
               <InputAdornment position="end">
                 <Tooltip
-                  title="Цена до скидки"
+                  title="Цена до скидки для покупателя"
                 >
-                  <HelpOutlineIcon sx={{ color: 'action.active', mr: 1, my: 0.5 }} />
+                  <HelpOutlineIconCustom />
                 </Tooltip>
               </InputAdornment>
             ),
@@ -209,7 +208,7 @@ export default function Main() {
                 <Tooltip
                   title="Стоимость одной единицы товара для вас"
                 >
-                  <HelpOutlineIcon sx={{ color: 'action.active', mr: 1, my: 0.5 }} />
+                  <HelpOutlineIconCustom />
                 </Tooltip>
               </InputAdornment>
             ),
@@ -251,7 +250,7 @@ export default function Main() {
                 <Tooltip
                   title="СПП - скидка постоянного покупателя"
                 >
-                  <HelpOutlineIcon sx={{ color: 'action.active', mr: 1, my: 0.5 }} />
+                  <HelpOutlineIconCustom />
                 </Tooltip>
               </InputAdornment>
             ),
@@ -279,7 +278,7 @@ export default function Main() {
                       </React.Fragment>
                     }
                   >
-                    <HelpOutlineIcon sx={{ color: 'action.active', mr: 1, my: 0.5 }} />
+                    <HelpOutlineIconCustom />
                   </Tooltip>
                 </InputAdornment>
               ),
@@ -368,7 +367,7 @@ export default function Main() {
                     <Tooltip
                       title="Выручка за вычетом скидок и комиссии WB"
                     >
-                      <HelpOutlineIcon sx={{ color: 'action.active', mr: 1, my: 0.5 }} />
+                      <HelpOutlineIconCustom />
                     </Tooltip>
                   </InputAdornment>
                 ),

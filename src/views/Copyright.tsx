@@ -7,7 +7,9 @@ import GitHubIcon from '@mui/icons-material/GitHub';
 
 function Copyright() {
   return (
-    <Typography variant="body2" color="text.secondary" align="center">
+    <Typography variant="body2" align="center" sx={{
+      color: (theme) => theme.palette.common.white
+    }}>
       {'Copyright © '}
       <Link color="inherit" href="https://github.com/albul-k/wb-price" target="_blank">
         <GitHubIcon />
@@ -26,7 +28,7 @@ export default function StickyFooter() {
       sx={{
         py: 2,
         mt: 'auto',
-        backgroundColor: (theme) => theme.palette.grey[200],
+        backgroundColor: (theme) => theme.palette.primary.main
       }}
     >
       <Copyright />

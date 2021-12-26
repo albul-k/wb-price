@@ -1,17 +1,14 @@
 import React from 'react';
-import { styled } from '@mui/material/styles';
 import TextField from '@mui/material/TextField';
-import Slider from '@mui/material/Slider';
-import Divider from '@mui/material/Divider';
-import Tooltip, { tooltipClasses } from '@mui/material/Tooltip';
-import { TextFieldProps, SliderProps, DividerProps, TooltipProps } from '@mui/material';
+import { TextFieldProps } from '@mui/material';
 import { MoneyFormatOutput } from './numberFormats';
+import HelpOutlineIcon from '@mui/icons-material/HelpOutline';
+
 
 export const TextFieldCustom = (props: TextFieldProps) => {
   return (
     <TextField
       {...props}
-      color="secondary"
       size="small"
       fullWidth
     />
@@ -30,54 +27,12 @@ export const TextFieldCustomOutput = (props: TextFieldProps) => {
   )
 };
 
-export const SliderCustom = (props: SliderProps) => {
-  const marks = [
-    { value: 0, label: '0%' },
-    { value: 20, label: '20%' },
-    { value: 40, label: '40%' },
-    { value: 60, label: '60%' },
-    { value: 80, label: '80%' },
-    { value: 100, label: '100%' },
-  ];
-
+export const HelpOutlineIconCustom = () => {
   return (
-    <Slider
-      {...props}
-      marks={marks}
-      sx={{
-        marginTop: '8px',
-        marginBottom: '8px',
-      }}
-      size='small'
-      step={1}
-      min={0}
-      max={100}
-      valueLabelDisplay="auto"
-      color="secondary"
-    />
+    <HelpOutlineIcon sx={{
+      color: 'action.active',
+      marginRight: (theme) => theme.spacing(1),
+      marginY: (theme) => theme.spacing(0.5),
+    }} />
   )
 };
-
-export const DividerCustom = (props: DividerProps) => {
-  return (
-    <Divider
-      {...props}
-      sx={{
-        marginTop: '40px',
-        marginBottom: '40px',
-      }}
-    />
-  )
-};
-
-export const HtmlTooltip = styled(({ className, ...props }: TooltipProps) => (
-  <Tooltip {...props} classes={{ popper: className }} />
-))(({ theme }) => ({
-  [`& .${tooltipClasses.tooltip}`]: {
-    backgroundColor: '#f5f5f9',
-    color: 'rgba(0, 0, 0, 0.87)',
-    maxWidth: 220,
-    fontSize: theme.typography.pxToRem(12),
-    border: '1px solid #dadde9',
-  },
-}));
