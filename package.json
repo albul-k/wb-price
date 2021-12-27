@@ -1,6 +1,6 @@
 {
   "name": "wb-price",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "private": true,
   "homepage": "http://albul-k.github.io/wb-price",
   "dependencies": {

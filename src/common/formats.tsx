@@ -9,7 +9,7 @@ interface CustomProps {
 };
 
 export const MoneyFormatInput = React.forwardRef<NumberFormat, CustomProps>(
-  function MoneyFormat(props, ref) {
+  function MoneyFormatInput(props, ref) {
     const { onChange, ...other } = props;
 
     return (
@@ -34,7 +34,7 @@ export const MoneyFormatInput = React.forwardRef<NumberFormat, CustomProps>(
 );
 
 export const MoneyFormatOutput = React.forwardRef<NumberFormat, CustomProps>(
-  function MoneyFormat(props, ref) {
+  function MoneyFormatOutput(props, ref) {
     const { onChange, ...other } = props;
 
     return (
@@ -59,7 +59,7 @@ export const MoneyFormatOutput = React.forwardRef<NumberFormat, CustomProps>(
 );
 
 export const PercentFormat = React.forwardRef<NumberFormat, CustomProps>(
-  function MoneyFormat(props, ref) {
+  function PercentFormat(props, ref) {
     const { onChange, ...other } = props;
 
     return (

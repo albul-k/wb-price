@@ -1,150 +1,68 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import Grid from '@mui/material/Grid';
 import Typography from '@mui/material/Typography';
 import Box from '@mui/material/Box';
 import MenuItem from '@mui/material/MenuItem';
-import { MoneyFormatInput, PercentFormat } from '../components/numberFormats';
-import { TextFieldCustom, TextFieldCustomOutput, HelpOutlineIconCustom } from '../components/components';
+import HelpOutlineIcon from '@mui/icons-material/HelpOutline';
 import Tooltip from '@mui/material/Tooltip';
 import InputAdornment from '@mui/material/InputAdornment';
 
+import { MoneyFormatInput, PercentFormat } from '../common/formats';
+import { TextFieldCustom } from '../components/TextFieldCustom';
+import { TextFieldCustomMoney } from '../components/TextFieldCustomMoney';
+import { CalculatedData } from '../common/interfaces';
+import { initCalculatedData, initInputData, taxTypes } from '../common/data';
+import {
+  calc_reward,
+  calc_discount,
+  calc_delivery,
+  calc_customer_price,
+  calc_earnings_dirty,
+  calc_earnings_no_delivery,
+  calc_earnings_no_tax,
+  calc_ebitda,
+  calc_tax
+} from '../common/functions';
 
-const rowSpacing = 1.5;
-const spacing = 3;
-
-const LOGISTICS_TARIFF_RETURN = 33;
-const initState = {
-  reward: 20,
-  logisticsTariff: 30,
-  price: 1000,
-  costPrice: 500,
-  discount: "",
-  promoСode: "",
-  loyaltyDiscount: "",
-  redemption: 80,
-  taxRate: 7,
-  taxType: "type_1"
-};
-
-const taxTypes = [
-  {
-    value: "type_1",
-    label: "Доходы",
-  },
-  {
-    value: "type_2",
-    label: "Доходы - Расходы",
-  }
-];
-
-interface Data {
-  reward: number | string
-  logisticsTariff: number
-  price: number
-  costPrice: number
-  discount: number | string
-  promoСode: number | string
-  loyaltyDiscount: number | string
-  redemption: number
-  taxRate: number | string
-  taxType: string
-}
-
-function round(num: number) {
-  return Math.round((num + Number.EPSILON) * 100) / 100
-};
-
-function calc_reward(data: Data) {
-  if (data.reward === 0) {
-    return 0
-  }
-  const price = calc_customer_price(data)
-  return round(price * (Number(data.reward) / 100))
-};
-
-function calc_discount(data: Data) {
-  let price = Number(data.price);
-  let discount = 0;
-  let total_discount = 0;
-  if (Number(data.discount) != 0) {
-    discount = price * (Number(data.discount) / 100);
-    price = price - discount;
-    total_discount = discount;
-  }
-  if (Number(data.promoСode) != 0) {
-    discount = (price * (Number(data.promoСode) / 100));
-    price = price - discount;
-    total_discount = total_discount + discount;
-  }
-  if (Number(data.loyaltyDiscount) != 0) {
-    discount = (price * (Number(data.loyaltyDiscount) / 100));
-    total_discount = total_discount + discount;
-  }
-  if (total_discount === 0) {
-    return 0
-  }
-  return round(total_discount)
-}
-
-function calc_delivery(data: Data) {
-  const logisticsTariff = Number(data.logisticsTariff);
-  const redemption = Number(data.redemption) / 100;
-  if (redemption === 0) {
-    return round(logisticsTariff + LOGISTICS_TARIFF_RETURN)
-  }
-
-  const deliverySoldItems = logisticsTariff * redemption;
-  const deliveryNotSoldItems = (logisticsTariff + LOGISTICS_TARIFF_RETURN) * (1 - redemption);
-  return round((deliverySoldItems + deliveryNotSoldItems) / redemption)
-}
-
-function calc_customer_price(data: Data) {
-  if (data.discount === 0) {
-    return data.price
-  }
-  return round(data.price - calc_discount(data))
-}
-
-function calc_earnings_dirty(data: Data) {
-  return round(calc_customer_price(data) - calc_reward(data))
-}
-
-function calc_earnings_no_delivery(data: Data) {
-  return round(calc_earnings_dirty(data) - calc_delivery(data))
-}
-
-function calc_earnings_no_tax(data: Data) {
-  return round(calc_ebitda(data) - calc_tax(data))
-}
-
-function calc_ebitda(data: Data) {
-  const ebitda = calc_earnings_no_delivery(data) - data.costPrice
-  return round(ebitda)
-}
-
-function calc_tax(data: Data) {
-  const taxRate = Number(data.taxRate) / 100;
-  if (taxRate === 0) {
-    return 0
-  }
-  if (data.taxType === "type_1") {
-    return round(calc_customer_price(data) * taxRate)
-  }
-  else if (data.taxType === "type_2") {
-    const ebitda = calc_ebitda(data)
-    return ebitda < 0 ? 0 : round(calc_ebitda(data) * taxRate)
-  }
-  return 0
-}
 
 export default function Main() {
-  const [state, setValue] = React.useState(initState);
+  const stateCalc: CalculatedData = initCalculatedData;
+  const [state, setValue] = useState(initInputData);
   const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setValue({ ...state, [event.target.name]: event.target.value });
   };
 
+  // Calculated fields
+  useEffect(() => { stateCalc.discount = calc_discount(state); },
+    [state.price, state.discount, state.promoСode, state.loyaltyDiscount],
+  );
+  useEffect(() => { stateCalc.delivery = calc_delivery(state); },
+    [state.logisticsTariff, state.redemption],
+  );
+  useEffect(() => { stateCalc.customerPrice = calc_customer_price(state); },
+    [stateCalc.discount],
+  );
+  useEffect(() => { stateCalc.reward = calc_reward(state); },
+    [stateCalc.customerPrice, state.reward],
+  );
+  useEffect(() => { stateCalc.earnings_dirty = calc_earnings_dirty(state); },
+    [stateCalc.customerPrice, stateCalc.delivery],
+  );
+  useEffect(() => { stateCalc.earnings_no_delivery = calc_earnings_no_delivery(state); },
+    [stateCalc.earnings_dirty, stateCalc.delivery],
+  );
+  useEffect(() => { stateCalc.ebitda = calc_ebitda(state); },
+    [stateCalc.earnings_no_delivery, state.costPrice],
+  );
+  useEffect(() => { stateCalc.tax = calc_tax(state); },
+    [state.taxRate, state.taxType, stateCalc.customerPrice, stateCalc.ebitda],
+  );
+  useEffect(() => { stateCalc.earnings_no_tax = calc_earnings_no_tax(state); },
+    [stateCalc.ebitda, stateCalc.tax],
+  );
+
   return (
-    <Grid container rowSpacing={rowSpacing} spacing={spacing}>
+    <Grid container rowSpacing={1.5} spacing={3}>
       <Grid item xs={12} sm={6}>
         <TextFieldCustom
           name="reward"
@@ -157,7 +75,12 @@ export default function Main() {
                 <Tooltip
                   title="Укажите коэффициент гарантированного вознаграждения по договору"
                 >
-                  <HelpOutlineIconCustom />
+                  <HelpOutlineIcon
+                    sx={{
+                      color: 'action.active',
+                      marginRight: (theme) => theme.spacing(1),
+                      marginY: (theme) => theme.spacing(0.5),
+                    }} />
                 </Tooltip>
               </InputAdornment>
             ),
@@ -188,7 +111,12 @@ export default function Main() {
                 <Tooltip
                   title="Цена до скидки для покупателя"
                 >
-                  <HelpOutlineIconCustom />
+                  <HelpOutlineIcon
+                    sx={{
+                      color: 'action.active',
+                      marginRight: (theme) => theme.spacing(1),
+                      marginY: (theme) => theme.spacing(0.5),
+                    }} />
                 </Tooltip>
               </InputAdornment>
             ),
@@ -208,7 +136,12 @@ export default function Main() {
                 <Tooltip
                   title="Стоимость одной единицы товара для вас"
                 >
-                  <HelpOutlineIconCustom />
+                  <HelpOutlineIcon
+                    sx={{
+                      color: 'action.active',
+                      marginRight: (theme) => theme.spacing(1),
+                      marginY: (theme) => theme.spacing(0.5),
+                    }} />
                 </Tooltip>
               </InputAdornment>
             ),
@@ -250,7 +183,12 @@ export default function Main() {
                 <Tooltip
                   title="СПП - скидка постоянного покупателя"
                 >
-                  <HelpOutlineIconCustom />
+                  <HelpOutlineIcon
+                    sx={{
+                      color: 'action.active',
+                      marginRight: (theme) => theme.spacing(1),
+                      marginY: (theme) => theme.spacing(0.5),
+                    }} />
                 </Tooltip>
               </InputAdornment>
             ),
@@ -278,7 +216,12 @@ export default function Main() {
                       </React.Fragment>
                     }
                   >
-                    <HelpOutlineIconCustom />
+                    <HelpOutlineIcon
+                      sx={{
+                        color: 'action.active',
+                        marginRight: (theme) => theme.spacing(1),
+                        marginY: (theme) => theme.spacing(0.5),
+                      }} />
                   </Tooltip>
                 </InputAdornment>
               ),
@@ -330,35 +273,35 @@ export default function Main() {
       </Grid>
 
       <Grid item xs={4}>
-        <Grid container rowSpacing={rowSpacing} spacing={spacing}>
+        <Grid container rowSpacing={1.5} spacing={3}>
           <Grid item xs={12}>
-            <TextFieldCustomOutput
+            <TextFieldCustomMoney
               label="Цена товара до скидок"
               value={state.price}
             />
           </Grid>
           <Grid item xs={12}>
-            <TextFieldCustomOutput
+            <TextFieldCustomMoney
               label="Сумма всех скидок"
-              value={calc_discount(state)}
+              value={stateCalc.discount}
             />
           </Grid>
           <Grid item xs={12}>
-            <TextFieldCustomOutput
+            <TextFieldCustomMoney
               label="Цена для покупателя"
-              value={calc_customer_price(state)}
+              value={stateCalc.customerPrice}
             />
           </Grid>
           <Grid item xs={12}>
-            <TextFieldCustomOutput
+            <TextFieldCustomMoney
               label="Вознаграждение WB"
-              value={calc_reward(state)}
+              value={stateCalc.reward}
             />
           </Grid>
           <Grid item xs={12}>
             <TextFieldCustom
               label="Выручка"
-              value={calc_earnings_dirty(state)}
+              value={stateCalc.earnings_dirty}
               InputProps={{
                 readOnly: true,
                 inputComponent: MoneyFormatInput as any,
@@ -367,7 +310,12 @@ export default function Main() {
                     <Tooltip
                       title="Выручка за вычетом скидок и комиссии WB"
                     >
-                      <HelpOutlineIconCustom />
+                      <HelpOutlineIcon
+                        sx={{
+                          color: 'action.active',
+                          marginRight: (theme) => theme.spacing(1),
+                          marginY: (theme) => theme.spacing(0.5),
+                        }} />
                     </Tooltip>
                   </InputAdornment>
                 ),
@@ -377,39 +325,39 @@ export default function Main() {
         </Grid>
       </Grid>
       <Grid item xs={4}>
-        <Grid container rowSpacing={rowSpacing} spacing={spacing}>
+        <Grid container rowSpacing={1.5} spacing={3}>
           <Grid item xs={12}>
-            <TextFieldCustomOutput
+            <TextFieldCustomMoney
               label="Стоимость доставки"
-              value={calc_delivery(state)}
+              value={stateCalc.delivery}
             />
           </Grid>
           <Grid item xs={12}>
-            <TextFieldCustomOutput
+            <TextFieldCustomMoney
               label="Выручка за вычетом доставки"
-              value={calc_earnings_no_delivery(state)}
+              value={stateCalc.earnings_no_delivery}
             />
           </Grid>
         </Grid>
       </Grid>
       <Grid item xs={4}>
-        <Grid container rowSpacing={rowSpacing} spacing={spacing}>
+        <Grid container rowSpacing={1.5} spacing={3}>
           <Grid item xs={12}>
-            <TextFieldCustomOutput
+            <TextFieldCustomMoney
               label="Валовая прибыль до вычета налогов (EBITDA)"
-              value={calc_ebitda(state)}
+              value={stateCalc.ebitda}
             />
           </Grid>
           <Grid item xs={12}>
-            <TextFieldCustomOutput
+            <TextFieldCustomMoney
               label="Сумма налога, руб"
-              value={calc_tax(state)}
+              value={stateCalc.tax}
             />
           </Grid>
           <Grid item xs={12}>
-            <TextFieldCustomOutput
+            <TextFieldCustomMoney
               label="Прибыль"
-              value={calc_earnings_no_tax(state)}
+              value={stateCalc.earnings_no_tax}
             />
           </Grid>
         </Grid>
