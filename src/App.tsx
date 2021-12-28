@@ -32,7 +32,8 @@ function App() {
         <Box sx={{
           display: 'flex',
           flexDirection: 'column',
-          minHeight: '100vh'
+          minHeight: '100vh',
+          overflowX: 'hidden'
         }}>
           <CssBaseline />
           <Container component="main" sx={{
