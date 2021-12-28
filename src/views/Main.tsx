@@ -134,7 +134,7 @@ export default function Main() {
             endAdornment: (
               <InputAdornment position="end">
                 <Tooltip
-                  title="Стоимость одной единицы товара для вас"
+                  title="Закупочная стоимость одной единицы товара"
                 >
                   <HelpOutlineIcon
                     sx={{
@@ -210,7 +210,7 @@ export default function Main() {
                   <Tooltip
                     title={
                       <React.Fragment>
-                        {'Если вы не знаете процент, то:'}<br />
+                        {'Если Вы не знаете процент, то:'}<br />
                         {'- для всех категорий, которые требуют примерки 30%'}<br />
                         {'- для остального товара 70-80%'}
                       </React.Fragment>
@@ -236,6 +236,25 @@ export default function Main() {
           label="Ставка налога, %"
           InputProps={{
             inputComponent: PercentFormat as any,
+            endAdornment: (
+              <InputAdornment position="end">
+                <Tooltip
+                  title={
+                    <React.Fragment>
+                      {'Если "Самозанятый", то выбрать'}<br />
+                      {'систему налогооблажения "Доходы" и указать ставку налога'}
+                    </React.Fragment>
+                  }
+                >
+                  <HelpOutlineIcon
+                    sx={{
+                      color: 'action.active',
+                      marginRight: (theme) => theme.spacing(1),
+                      marginY: (theme) => theme.spacing(0.5),
+                    }} />
+                </Tooltip>
+              </InputAdornment>
+            ),
           }}
           onChange={handleInputChange}
         />
@@ -343,9 +362,27 @@ export default function Main() {
       <Grid item xs={4}>
         <Grid container rowSpacing={1.5} spacing={3}>
           <Grid item xs={12}>
-            <TextFieldCustomMoney
+            <TextFieldCustom
               label="Валовая прибыль до вычета налогов (EBITDA)"
               value={stateCalc.ebitda}
+              InputProps={{
+                readOnly: true,
+                inputComponent: MoneyFormatInput as any,
+                endAdornment: (
+                  <InputAdornment position="end">
+                    <Tooltip
+                      title="Выручка за минусом себестоимости"
+                    >
+                      <HelpOutlineIcon
+                        sx={{
+                          color: 'action.active',
+                          marginRight: (theme) => theme.spacing(1),
+                          marginY: (theme) => theme.spacing(0.5),
+                        }} />
+                    </Tooltip>
+                  </InputAdornment>
+                ),
+              }}
             />
           </Grid>
           <Grid item xs={12}>
