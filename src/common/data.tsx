@@ -1,4 +1,4 @@
-import { Data, CalculatedData } from './interfaces';
+import { InputData, CalculatedData } from './interfaces';
 
 
 export const taxTypes = [
@@ -12,7 +12,7 @@ export const taxTypes = [
     }
   ];
   
-export const initInputData: Data = {
+export const initInputData: InputData = {
     reward: 20,
     logisticsTariff: 30,
     price: 1000,
@@ -30,9 +30,9 @@ export const initCalculatedData: CalculatedData = {
     discount: 0,
     delivery: 0,
     customerPrice: 0,
-    earnings_dirty: 0,
-    earnings_no_delivery: 0,
-    earnings_no_tax: 0,
+    earningsDirty: 0,
+    earningsNoDelivery: 0,
+    earningsNoTax: 0,
     ebitda: 0,
     tax: 0
   };

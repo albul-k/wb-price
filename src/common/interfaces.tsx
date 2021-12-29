@@ -1,4 +1,4 @@
-export interface Data {
+export interface InputData {
   reward: number | string
   logisticsTariff: number
   price: number
@@ -16,9 +16,9 @@ export interface CalculatedData {
   discount: number
   delivery: number
   customerPrice: number
-  earnings_dirty: number
-  earnings_no_delivery: number
-  earnings_no_tax: number
+  earningsDirty: number
+  earningsNoDelivery: number
+  earningsNoTax: number
   ebitda: number
   tax: number
 };

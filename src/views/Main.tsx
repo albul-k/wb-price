@@ -12,53 +12,76 @@ import { TextFieldCustom } from '../components/TextFieldCustom';
 import { TextFieldCustomMoney } from '../components/TextFieldCustomMoney';
 import { CalculatedData } from '../common/interfaces';
 import { initCalculatedData, initInputData, taxTypes } from '../common/data';
+import discount from '../calculations/discount';
+import customerPrice from '../calculations/customerPrice';
+import delivery from '../calculations/delivery';
+import reward from '../calculations/reward';
+import ebitda from '../calculations/ebitda';
+import tax from '../calculations/tax';
 import {
-  calc_reward,
-  calc_discount,
-  calc_delivery,
-  calc_customer_price,
-  calc_earnings_dirty,
-  calc_earnings_no_delivery,
-  calc_earnings_no_tax,
-  calc_ebitda,
-  calc_tax
-} from '../common/functions';
+  earningsDirty,
+  earningsNoDelivery,
+  earningsNoTax
+} from '../calculations/earnings';
 
 
 export default function Main() {
-  const stateCalc: CalculatedData = initCalculatedData;
   const [state, setValue] = useState(initInputData);
+  const [stateCalc, setCalcValue] = useState(initCalculatedData);
+
+  function updateCalcValues() {
+    let calcData: any = {};
+    calcData.discount = discount({
+      'price': Number(state.price),
+      'discount': Number(state.discount),
+      'promoСode': Number(state.promoСode),
+      'loyaltyDiscount': Number(state.loyaltyDiscount)
+    });
+    calcData.delivery = delivery({
+      'logisticsTariff': Number(state.logisticsTariff),
+      'redemption': Number(state.redemption)
+    });
+    calcData.customerPrice = customerPrice({
+      'price': Number(state.price),
+      'discount': calcData.discount
+    });
+    calcData.reward = reward({
+      'customerPrice': calcData.customerPrice,
+      'reward': Number(state.reward)
+    });
+    calcData.earningsDirty = earningsDirty({
+      'customerPrice': calcData.customerPrice,
+      'reward': calcData.reward
+    });
+    calcData.earningsNoDelivery = earningsNoDelivery({
+      'earningsDirty': calcData.earningsDirty,
+      'delivery': calcData.delivery
+    });
+    calcData.ebitda = ebitda({
+      'earningsNoDelivery': calcData.earningsNoDelivery,
+      'costPrice': state.costPrice
+    });
+    calcData.tax = tax({
+      'taxRate': Number(state.taxRate),
+      'taxType': state.taxType,
+      'customerPrice': calcData.customerPrice,
+      'ebitda': calcData.ebitda
+    });
+    calcData.earningsNoTax = earningsNoTax({
+      'ebitda': calcData.ebitda,
+      'tax': calcData.tax
+    });
+    
+    setCalcValue(calcData);
+  }
+
   const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setValue({ ...state, [event.target.name]: event.target.value });
   };
-
-  // Calculated fields
-  useEffect(() => { stateCalc.discount = calc_discount(state); },
-    [state.price, state.discount, state.promoСode, state.loyaltyDiscount],
-  );
-  useEffect(() => { stateCalc.delivery = calc_delivery(state); },
-    [state.logisticsTariff, state.redemption],
-  );
-  useEffect(() => { stateCalc.customerPrice = calc_customer_price(state); },
-    [stateCalc.discount],
-  );
-  useEffect(() => { stateCalc.reward = calc_reward(state); },
-    [stateCalc.customerPrice, state.reward],
-  );
-  useEffect(() => { stateCalc.earnings_dirty = calc_earnings_dirty(state); },
-    [stateCalc.customerPrice, stateCalc.delivery],
-  );
-  useEffect(() => { stateCalc.earnings_no_delivery = calc_earnings_no_delivery(state); },
-    [stateCalc.earnings_dirty, stateCalc.delivery],
-  );
-  useEffect(() => { stateCalc.ebitda = calc_ebitda(state); },
-    [stateCalc.earnings_no_delivery, state.costPrice],
-  );
-  useEffect(() => { stateCalc.tax = calc_tax(state); },
-    [state.taxRate, state.taxType, stateCalc.customerPrice, stateCalc.ebitda],
-  );
-  useEffect(() => { stateCalc.earnings_no_tax = calc_earnings_no_tax(state); },
-    [stateCalc.ebitda, stateCalc.tax],
+  
+  useEffect(() => {
+    updateCalcValues();
+  }, [state],
   );
 
   return (
@@ -320,7 +343,7 @@ export default function Main() {
           <Grid item xs={12}>
             <TextFieldCustom
               label="Выручка"
-              value={stateCalc.earnings_dirty}
+              value={stateCalc.earningsDirty}
               InputProps={{
                 readOnly: true,
                 inputComponent: MoneyFormatInput as any,
@@ -354,7 +377,7 @@ export default function Main() {
           <Grid item xs={12}>
             <TextFieldCustomMoney
               label="Выручка за вычетом доставки"
-              value={stateCalc.earnings_no_delivery}
+              value={stateCalc.earningsNoDelivery}
             />
           </Grid>
         </Grid>
@@ -394,7 +417,7 @@ export default function Main() {
           <Grid item xs={12}>
             <TextFieldCustomMoney
               label="Прибыль"
-              value={stateCalc.earnings_no_tax}
+              value={stateCalc.earningsNoTax}
             />
           </Grid>
         </Grid>
