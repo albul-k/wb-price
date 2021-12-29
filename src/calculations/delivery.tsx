@@ -8,13 +8,12 @@ interface Delivery {
 
 export default function delivery(data: Delivery) {
   const logisticsTariffReturn = 33;
-  const logisticsTariff = Number(data.logisticsTariff);
-  const redemption = Number(data.redemption) / 100;
+  const redemption = data.redemption / 100;
   if (redemption === 0) {
-    return round(logisticsTariff + logisticsTariffReturn)
+    return round(data.logisticsTariff + logisticsTariffReturn)
   }
 
-  const deliverySoldItems = logisticsTariff * redemption;
-  const deliveryNotSoldItems = (logisticsTariff + logisticsTariffReturn) * (1 - redemption);
+  const deliverySoldItems = data.logisticsTariff * redemption;
+  const deliveryNotSoldItems = (data.logisticsTariff + logisticsTariffReturn) * (1 - redemption);
   return round((deliverySoldItems + deliveryNotSoldItems) / redemption)
 };

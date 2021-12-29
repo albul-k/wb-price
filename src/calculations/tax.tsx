@@ -8,7 +8,7 @@ interface Tax {
   ebitda: number
 };
 
-export default function calc_tax(data: Tax) {
+export default function tax(data: Tax) {
   if (data.taxRate === 0) {
     return 0
   }
