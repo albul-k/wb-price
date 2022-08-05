@@ -19,14 +19,9 @@ test('tax', () => {
 });
 
 test('discount', () => {
-  expect(discount({ 'price': 1000, 'discount': 0, 'promoСode': 0, 'loyaltyDiscount': 0 })).toEqual(0);
-  expect(discount({ 'price': 1000, 'discount': 5, 'promoСode': 0, 'loyaltyDiscount': 0 })).toEqual(50);
-  expect(discount({ 'price': 1000, 'discount': 0, 'promoСode': 5, 'loyaltyDiscount': 0 })).toEqual(50);
-  expect(discount({ 'price': 1000, 'discount': 0, 'promoСode': 0, 'loyaltyDiscount': 5 })).toEqual(50);
-  expect(discount({ 'price': 1000, 'discount': 0, 'promoСode': 5, 'loyaltyDiscount': 5 })).toEqual(97.5);
-  expect(discount({ 'price': 1000, 'discount': 5, 'promoСode': 0, 'loyaltyDiscount': 5 })).toEqual(97.5);
-  expect(discount({ 'price': 1000, 'discount': 5, 'promoСode': 5, 'loyaltyDiscount': 0 })).toEqual(97.5);
-  expect(discount({ 'price': 1000, 'discount': 5, 'promoСode': 5, 'loyaltyDiscount': 5 })).toEqual(142.63);
+  expect(discount({ 'price': 1000, 'discount': 0})).toEqual(0);
+  expect(discount({ 'price': 1000, 'discount': 5})).toEqual(50);
+  expect(discount({ 'price': 1000, 'discount': 100})).toEqual(1000);
 });
 
 test('customerPrice', () => {

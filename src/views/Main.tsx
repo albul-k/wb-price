@@ -10,7 +10,7 @@ import InputAdornment from '@mui/material/InputAdornment';
 import { MoneyFormatInput, PercentFormat } from '../common/formats';
 import { TextFieldCustom } from '../components/TextFieldCustom';
 import { TextFieldCustomMoney } from '../components/TextFieldCustomMoney';
-import { CalculatedData } from '../common/interfaces';
+// import { CalculatedData } from '../common/interfaces';
 import { initCalculatedData, initInputData, taxTypes } from '../common/data';
 import discount from '../calculations/discount';
 import customerPrice from '../calculations/customerPrice';
@@ -33,9 +33,7 @@ export default function Main() {
     let calcData: any = {};
     calcData.discount = discount({
       'price': Number(state.price),
-      'discount': Number(state.discount),
-      'promoСode': Number(state.promoСode),
-      'loyaltyDiscount': Number(state.loyaltyDiscount)
+      'discount': Number(state.discount)
     });
     calcData.delivery = delivery({
       'logisticsTariff': Number(state.logisticsTariff),
@@ -172,7 +170,7 @@ export default function Main() {
           onChange={handleInputChange}
         />
       </Grid>
-      <Grid item xs={12} sm={4}>
+      <Grid item xs={12} sm={6}>
         <TextFieldCustom
           name="discount"
           value={state.discount}
@@ -183,43 +181,7 @@ export default function Main() {
           onChange={handleInputChange}
         />
       </Grid>
-      <Grid item xs={12} sm={4}>
-        <TextFieldCustom
-          name="promoСode"
-          value={state.promoСode}
-          label="Промокод, %"
-          InputProps={{
-            inputComponent: PercentFormat as any,
-          }}
-          onChange={handleInputChange}
-        />
-      </Grid>
-      <Grid item xs={12} sm={4}>
-        <TextFieldCustom
-          name="loyaltyDiscount"
-          value={state.loyaltyDiscount}
-          label="СПП, %"
-          InputProps={{
-            inputComponent: PercentFormat as any,
-            endAdornment: (
-              <InputAdornment position="end">
-                <Tooltip
-                  title="СПП - скидка постоянного покупателя"
-                >
-                  <HelpOutlineIcon
-                    sx={{
-                      color: 'action.active',
-                      marginRight: (theme) => theme.spacing(1),
-                      marginY: (theme) => theme.spacing(0.5),
-                    }} />
-                </Tooltip>
-              </InputAdornment>
-            ),
-          }}
-          onChange={handleInputChange}
-        />
-      </Grid>
-      <Grid item xs={12} sm={12}>
+      <Grid item xs={12} sm={6}>
         <Box sx={{ display: 'flex', alignItems: 'flex-end' }}>
           <TextFieldCustom
             name="redemption"

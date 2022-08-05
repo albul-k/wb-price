@@ -18,8 +18,6 @@ export const initInputData: InputData = {
     price: 1000,
     costPrice: 500,
     discount: "",
-    promoСode: "",
-    loyaltyDiscount: "",
     redemption: 80,
     taxRate: 7,
     taxType: "type_1"

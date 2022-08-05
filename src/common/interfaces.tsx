@@ -4,8 +4,6 @@ export interface InputData {
   price: number
   costPrice: number
   discount: number | string
-  promoСode: number | string
-  loyaltyDiscount: number | string
   redemption: number
   taxRate: number | string
   taxType: string
