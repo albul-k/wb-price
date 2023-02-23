@@ -7,6 +7,7 @@ import NumberFormat from 'react-number-format';
 // };
 
 export const MoneyFormatInput = forwardRef(function MoneyFormatInput(props, ref) {
+    // eslint-disable-next-line react/prop-types
     const { onChange, ...other } = props;
 
     return (
@@ -16,6 +17,7 @@ export const MoneyFormatInput = forwardRef(function MoneyFormatInput(props, ref)
             onValueChange={(values) => {
                 onChange({
                     target: {
+                        // eslint-disable-next-line react/prop-types
                         name: props.name,
                         value: values.value
                     }
@@ -30,6 +32,7 @@ export const MoneyFormatInput = forwardRef(function MoneyFormatInput(props, ref)
 });
 
 export const MoneyFormatOutput = forwardRef(function MoneyFormatOutput(props, ref) {
+    // eslint-disable-next-line react/prop-types
     const { onChange, ...other } = props;
 
     return (
@@ -39,6 +42,7 @@ export const MoneyFormatOutput = forwardRef(function MoneyFormatOutput(props, re
             onValueChange={(values) => {
                 onChange({
                     target: {
+                        // eslint-disable-next-line react/prop-types
                         name: props.name,
                         value: values.value
                     }
@@ -53,6 +57,7 @@ export const MoneyFormatOutput = forwardRef(function MoneyFormatOutput(props, re
 });
 
 export const PercentFormat = forwardRef(function PercentFormat(props, ref) {
+    // eslint-disable-next-line react/prop-types
     const { onChange, ...other } = props;
 
     return (
@@ -62,6 +67,7 @@ export const PercentFormat = forwardRef(function PercentFormat(props, ref) {
             onValueChange={(values) => {
                 onChange({
                     target: {
+                        // eslint-disable-next-line react/prop-types
                         name: props.name,
                         value: values.value
                     }
