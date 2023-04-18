@@ -11,7 +11,7 @@ export const taxTypes = [
 
 export const initInputData = {
     reward: 20,
-    logisticsTariff: 30,
+    logisticsTariff: 50,
     price: 1000,
     costPrice: 500,
     discount: '',
