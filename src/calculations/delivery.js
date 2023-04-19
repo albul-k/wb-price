@@ -2,7 +2,7 @@ import PropTypes from 'prop-types';
 import { round } from '../common/functions';
 
 export default function delivery(data) {
-    const logisticsTariffReturn = 33;
+    const logisticsTariffReturn = 50;
     const redemption = data.redemption / 100;
     if (redemption === 0) {
         return round(data.logisticsTariff + logisticsTariffReturn);

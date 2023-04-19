@@ -28,8 +28,8 @@ test('customerPrice', () => {
     expect(customerPrice({ price: 1000, discount: 900 })).toEqual(100);
 });
 
-test('delivery', () => {
-    expect(delivery({ logisticsTariff: 30, redemption: 80 })).toEqual(45.75);
+test('delivery #1', () => {
+    expect(delivery({ logisticsTariff: 30, redemption: 80 })).toEqual(50);
     expect(delivery({ logisticsTariff: 30, redemption: 100 })).toEqual(30);
-    expect(delivery({ logisticsTariff: 30, redemption: 0 })).toEqual(63);
+    expect(delivery({ logisticsTariff: 30, redemption: 0 })).toEqual(80);
 });
