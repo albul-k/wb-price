@@ -216,7 +216,7 @@ export default function Main() {
                                         <React.Fragment>
                                             {'Если "Самозанятый", то выбрать'}
                                             <br />
-                                            {'систему налогооблажения "Доходы" и указать ставку налога'}
+                                            {'систему налогообложения "Доходы" и указать ставку налога'}
                                         </React.Fragment>
                                     }
                                 >
@@ -235,7 +235,7 @@ export default function Main() {
                 />
             </Grid>
             <Grid item xs={12} sm={6}>
-                <TextFieldCustom select name="taxType" value={state.taxType} label="Система налогооблажения" onChange={handleInputChange}>
+                <TextFieldCustom select name="taxType" value={state.taxType} label="Система налогообложения" onChange={handleInputChange}>
                     {taxTypes.map((option) => (
                         <MenuItem key={option.value} value={option.value}>
                             {option.label}
