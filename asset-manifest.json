@@ -1,0 +1,14 @@
+{
+  "files": {
+    "main.css": "/wb-price/static/css/main.e6c13ad2.css",
+    "main.js": "/wb-price/static/js/main.afbb439c.js",
+    "static/media/logo.png": "/wb-price/static/media/logo.93f49d11bdd919bd4402.png",
+    "index.html": "/wb-price/index.html",
+    "main.e6c13ad2.css.map": "/wb-price/static/css/main.e6c13ad2.css.map",
+    "main.afbb439c.js.map": "/wb-price/static/js/main.afbb439c.js.map"
+  },
+  "entrypoints": [
+    "static/css/main.e6c13ad2.css",
+    "static/js/main.afbb439c.js"
+  ]
+}
