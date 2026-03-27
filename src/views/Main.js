@@ -7,12 +7,10 @@ import HelpOutlineIcon from '@mui/icons-material/HelpOutline';
 import Tooltip from '@mui/material/Tooltip';
 import InputAdornment from '@mui/material/InputAdornment';
 
-import { MoneyFormatInput, PercentFormat } from '../common/formats';
+import { MoneyFormatInput, PercentFormat, PercentFormatAny } from '../common/formats';
 import { TextFieldCustom } from '../components/TextFieldCustom';
 import { TextFieldCustomMoney } from '../components/TextFieldCustomMoney';
 import { initCalculatedData, initInputData, taxTypes } from '../common/data';
-import discount from '../calculations/discount';
-import customerPrice from '../calculations/customerPrice';
 import delivery from '../calculations/delivery';
 import reward from '../calculations/reward.js';
 import ebitda from '../calculations/ebitda';
@@ -28,18 +26,12 @@ export default function Main() {
 
     useEffect(() => {
         let calcData = {};
-        calcData.discount = discount({
-            price: Number(state.price),
-            discount: Number(state.discount)
-        });
         calcData.delivery = delivery({
-            logisticsTariff: Number(state.logisticsTariff),
+            coeffWarehouse: state.coeffWarehouse,
+            volume: Number(state.volume),
             redemption: Number(state.redemption)
         });
-        calcData.customerPrice = customerPrice({
-            price: Number(state.price),
-            discount: calcData.discount
-        });
+        calcData.customerPrice = Number(state.price);
         calcData.reward = reward({
             customerPrice: calcData.customerPrice,
             reward: Number(state.reward)
@@ -98,11 +90,11 @@ export default function Main() {
             </Grid>
             <Grid item xs={12} sm={6}>
                 <TextFieldCustom
-                    name="logisticsTariff"
-                    value={state.logisticsTariff}
-                    label="Тариф логистики WB, ₽"
+                    name="coeffWarehouse"
+                    value={state.coeffWarehouse}
+                    label="Коэффициент склада, %"
                     InputProps={{
-                        inputComponent: MoneyFormatInput
+                        inputComponent: PercentFormatAny
                     }}
                     onChange={handleInputChange}
                 />
@@ -156,22 +148,14 @@ export default function Main() {
                 />
             </Grid>
             <Grid item xs={12} sm={6}>
-                <TextFieldCustom
-                    name="discount"
-                    value={state.discount}
-                    label="Скидка, %"
-                    InputProps={{
-                        inputComponent: PercentFormat
-                    }}
-                    onChange={handleInputChange}
-                />
+                <TextFieldCustom name="volume" value={state.volume} label="Объём товара, л" type="number" onChange={handleInputChange} />
             </Grid>
             <Grid item xs={12} sm={6}>
                 <Box sx={{ display: 'flex', alignItems: 'flex-end' }}>
                     <TextFieldCustom
                         name="redemption"
                         value={state.redemption}
-                        label="Процент выкупа товара"
+                        label="Процент выкупа товара, %"
                         onChange={handleInputChange}
                         InputProps={{
                             inputComponent: PercentFormat,
@@ -260,12 +244,6 @@ export default function Main() {
                         <TextFieldCustomMoney label="Цена товара до скидок" value={state.price} />
                     </Grid>
                     <Grid item xs={12}>
-                        <TextFieldCustomMoney label="Сумма всех скидок" value={stateCalc.discount} />
-                    </Grid>
-                    <Grid item xs={12}>
-                        <TextFieldCustomMoney label="Цена для покупателя" value={stateCalc.customerPrice} />
-                    </Grid>
-                    <Grid item xs={12}>
                         <TextFieldCustomMoney label="Вознаграждение WB" value={stateCalc.reward} />
                     </Grid>
                     <Grid item xs={12}>
@@ -329,7 +307,7 @@ export default function Main() {
                         />
                     </Grid>
                     <Grid item xs={12}>
-                        <TextFieldCustomMoney label="Сумма налога, руб" value={stateCalc.tax} />
+                        <TextFieldCustomMoney label="Сумма налога" value={stateCalc.tax} />
                     </Grid>
                     <Grid item xs={12}>
                         <TextFieldCustomMoney label="Прибыль" value={stateCalc.earningsNoTax} />

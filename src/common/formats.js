@@ -80,3 +80,28 @@ export const PercentFormat = forwardRef(function PercentFormat(props, ref) {
         />
     );
 });
+
+export const PercentFormatAny = forwardRef(function PercentFormat(props, ref) {
+    // eslint-disable-next-line react/prop-types
+    const { onChange, ...other } = props;
+
+    return (
+        <NumberFormat
+            {...other}
+            getInputRef={ref}
+            onValueChange={(values) => {
+                onChange({
+                    target: {
+                        // eslint-disable-next-line react/prop-types
+                        name: props.name,
+                        value: values.value
+                    }
+                });
+            }}
+            isAllowed={({ value = 0 }) => value <= 1000}
+            allowNegative={false}
+            // isNumericString
+            suffix=" %"
+        />
+    );
+});

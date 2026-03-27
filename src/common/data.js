@@ -11,10 +11,10 @@ export const taxTypes = [
 
 export const initInputData = {
     reward: 20,
-    logisticsTariff: 30,
+    coeffWarehouse: 100,
     price: 1000,
     costPrice: 500,
-    discount: '',
+    volume: 5,
     redemption: 80,
     taxRate: 7,
     taxType: 'type_1'
@@ -22,9 +22,7 @@ export const initInputData = {
 
 export const initCalculatedData = {
     reward: 0,
-    discount: 0,
     delivery: 0,
-    customerPrice: 0,
     earningsDirty: 0,
     earningsNoDelivery: 0,
     earningsNoTax: 0,

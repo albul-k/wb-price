@@ -1,5 +1,3 @@
-import discount from '../calculations/discount';
-import customerPrice from '../calculations/customerPrice';
 import delivery from '../calculations/delivery';
 import reward from '../calculations/reward';
 import tax from '../calculations/tax';
@@ -17,19 +15,11 @@ test('tax', () => {
     expect(tax({ taxRate: 7, taxType: 'type_undef', customerPrice: 1000, ebitda: 0 })).toEqual(0);
 });
 
-test('discount', () => {
-    expect(discount({ price: 1000, discount: 0 })).toEqual(0);
-    expect(discount({ price: 1000, discount: 5 })).toEqual(50);
-    expect(discount({ price: 1000, discount: 100 })).toEqual(1000);
-});
-
-test('customerPrice', () => {
-    expect(customerPrice({ price: 1000, discount: 0 })).toEqual(1000);
-    expect(customerPrice({ price: 1000, discount: 900 })).toEqual(100);
-});
-
-test('delivery #1', () => {
-    expect(delivery({ logisticsTariff: 30, redemption: 80 })).toEqual(50);
-    expect(delivery({ logisticsTariff: 30, redemption: 100 })).toEqual(30);
-    expect(delivery({ logisticsTariff: 30, redemption: 0 })).toEqual(80);
+test('delivery', () => {
+    expect(delivery({ coeffWarehouse: 200, volume: 5, redemption: 50 })).toEqual(510);
+    expect(delivery({ coeffWarehouse: 100, volume: 5, redemption: 100 })).toEqual(102);
+    expect(delivery({ coeffWarehouse: 50, volume: 5, redemption: 0 })).toEqual(153);
+    expect(delivery({ coeffWarehouse: 200, volume: 1, redemption: 50 })).toEqual(160);
+    expect(delivery({ coeffWarehouse: 100, volume: 1, redemption: 100 })).toEqual(32);
+    expect(delivery({ coeffWarehouse: 50, volume: 1, redemption: 0 })).toEqual(48);
 });
