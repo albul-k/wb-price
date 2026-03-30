@@ -99,7 +99,7 @@ export const PercentFormatAny = forwardRef(function PercentFormat(props, ref) {
                 });
             }}
             isAllowed={({ value = 0 }) => value <= 1000}
-            allowNegative={false}
+            allowNegative={true}
             // isNumericString
             suffix=" %"
         />

@@ -1,7 +1,7 @@
 import React from 'react';
 
 import CssBaseline from '@mui/material/CssBaseline';
-import { green, purple } from '@mui/material/colors';
+import { grey, purple } from '@mui/material/colors';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import Container from '@mui/material/Container';
 import Box from '@mui/material/Box';
@@ -18,11 +18,16 @@ import logo from './assets/images/logo.png';
 const theme = createTheme({
     palette: {
         primary: {
-            main: purple[500]
+            main: purple[700],
+            light: grey[200]
         },
         secondary: {
-            main: green[500]
+            main: grey[700],
+            light: grey[300]
         }
+    },
+    typography: {
+        fontSize: 12
     }
 });
 
@@ -36,7 +41,8 @@ function App() {
                         display: 'flex',
                         flexDirection: 'column',
                         minHeight: '100vh',
-                        overflowX: 'hidden'
+                        height: 'calc(100% - 200px)',
+                        backgroundColor: theme.palette.primary.light
                     }}
                 >
                     <CssBaseline />
@@ -44,7 +50,7 @@ function App() {
                         component="main"
                         sx={{
                             [theme.breakpoints.down('lg')]: {
-                                paddingX: theme.spacing(2)
+                                paddingX: theme.spacing(3)
                             }
                         }}
                     >
@@ -52,7 +58,7 @@ function App() {
                             <Grid item xs={12}>
                                 <Stack
                                     direction="row"
-                                    sx={{ m: 1, marginY: theme.spacing(2), color: theme.palette.primary.main, alignItems: 'center' }}
+                                    sx={{ m: 1, marginY: theme.spacing(3), color: theme.palette.secondary.dark, alignItems: 'center' }}
                                     justifyContent="space-between"
                                 >
                                     <Link color="inherit" href="https://t.me/wb_fin" target="_blank">

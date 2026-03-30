@@ -2,11 +2,11 @@ import PropTypes from 'prop-types';
 import { round } from '../common/functions';
 
 export function earningsDirty(data) {
-    return round(data.customerPrice - data.reward);
+    return round(data.priceWithoutSPP - data.resultWBCosts);
 }
 
 export function earningsNoDelivery(data) {
-    return round(data.earningsDirty - data.delivery);
+    return round(data.earningsDirty - data.deliveryCosts);
 }
 
 export function earningsNoTax(data) {
@@ -14,13 +14,13 @@ export function earningsNoTax(data) {
 }
 
 earningsDirty.PropTypes = {
-    customerPrice: PropTypes.number,
-    reward: PropTypes.number
+    priceWithoutSPP: PropTypes.number,
+    resultWBCosts: PropTypes.number
 };
 
 earningsNoDelivery.PropTypes = {
     earningsDirty: PropTypes.number,
-    delivery: PropTypes.number
+    deliveryCosts: PropTypes.number
 };
 
 earningsNoTax.PropTypes = {

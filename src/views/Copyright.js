@@ -10,7 +10,7 @@ function Copyright() {
             variant="body2"
             align="center"
             sx={{
-                color: (theme) => theme.palette.common.white
+                color: (theme) => theme.palette.primary.light
             }}
         >
             {'Copyright © '}
@@ -31,7 +31,7 @@ export default function StickyFooter() {
             sx={{
                 py: 1,
                 mt: 'auto',
-                backgroundColor: (theme) => theme.palette.primary.main
+                backgroundColor: (theme) => theme.palette.secondary.dark
             }}
         >
             <Copyright />
