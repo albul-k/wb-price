@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { useTheme } from '@mui/material/styles';
 import Divider from '@mui/material/Divider';
 import Box from '@mui/material/Box';
 import MenuItem from '@mui/material/MenuItem';
@@ -8,8 +9,6 @@ import InputAdornment from '@mui/material/InputAdornment';
 import CardHeader from '@mui/material/CardHeader';
 import CardContent from '@mui/material/CardContent';
 import Grid from '@mui/material/Grid';
-import Chip from '@mui/material/Chip';
-import { useTheme } from '@mui/material/styles';
 import IconButton from '@mui/material/IconButton';
 import AccountBalanceWalletOutlinedIcon from '@mui/icons-material/AccountBalanceWalletOutlined';
 import StraightenOutlinedIcon from '@mui/icons-material/StraightenOutlined';
@@ -30,11 +29,10 @@ import { CardCustom } from '../components/CardCustom';
 import { MoneyFormatInput, PercentFormat, PercentFormatAny } from '../common/formats';
 import { TextFieldCustom } from '../components/TextFieldCustom';
 import { initCalculatedData, initInputData, taxTypes } from '../common/data';
-import deliveryCosts, { deliveryCostsToClient, deliveryCostsToWarehouse } from '../calculations/deliveryCosts';
+import delivery, { deliveryToClient, deliveryToWarehouse } from '../calculations/delivery';
 import reward from '../calculations/reward.js';
-import ebitda from '../calculations/ebitda';
-import tax, { taxBase, taxVAT } from '../calculations/tax';
-import { earningsDirty, earningsNoDelivery, earningsNoTax } from '../calculations/earnings';
+import { taxBase, taxVAT } from '../calculations/tax';
+import { profit } from '../calculations/profit';
 
 export default function Main() {
     const theme = useTheme();
@@ -95,9 +93,10 @@ export default function Main() {
     useEffect(() => {
         let calcData = {};
         calcData.priceWithoutSPP = Number(state.price);
+        calcData.costPrice = Number(state.costPrice);
         calcData.priceWithSPP = calcData.priceWithoutSPP - (Number(state.spp) / 100) * calcData.priceWithoutSPP;
         calcData.priceWithSPPandWallet = calcData.priceWithSPP - (Number(state.wallet) / 100) * calcData.priceWithSPP;
-        calcData.deliveryCosts = deliveryCosts({
+        calcData.delivery = delivery({
             priceWithoutSPP: calcData.priceWithoutSPP,
             coeffWarehouse: Number(state.coeffWarehouse),
             indLocal: Number(state.indLocal),
@@ -105,14 +104,14 @@ export default function Main() {
             volume: Number(state.volume),
             redemption: Number(state.redemption)
         });
-        calcData.deliveryCostsToClient = deliveryCostsToClient({
+        calcData.deliveryToClient = deliveryToClient({
             priceWithoutSPP: calcData.priceWithoutSPP,
             coeffWarehouse: Number(state.coeffWarehouse),
             indLocal: Number(state.indLocal),
             indDistribSales: Number(state.indDistribSales),
             volume: Number(state.volume)
         });
-        calcData.deliveryCostsToWarehouse = deliveryCostsToWarehouse({
+        calcData.deliveryToWarehouse = deliveryToWarehouse({
             volume: Number(state.volume)
         });
         calcData.reward = reward({
@@ -123,19 +122,8 @@ export default function Main() {
         calcData.advert = calcData.priceWithoutSPP * (Number(state.advert) / 100);
         calcData.equiring = calcData.priceWithSPPandWallet * (Number(state.equiring) / 100);
         calcData.anyCosts = calcData.priceWithoutSPP * (Number(state.anyCosts) / 100);
-        calcData.resultWBCosts = calcData.reward + calcData.deliveryCosts + calcData.advert + calcData.equiring + calcData.anyCosts;
-        calcData.earningsDirty = earningsDirty({
-            priceWithoutSPP: calcData.priceWithoutSPP,
-            resultWBCosts: calcData.resultWBCosts
-        });
-        calcData.earningsNoDelivery = earningsNoDelivery({
-            earningsDirty: calcData.earningsDirty,
-            deliveryCosts: calcData.deliveryCosts
-        });
-        calcData.ebitda = ebitda({
-            earningsNoDelivery: calcData.earningsNoDelivery,
-            priceWithoutSPP: calcData.priceWithoutSPP
-        });
+        calcData.resultWBCosts = calcData.reward + calcData.delivery + calcData.advert + calcData.equiring + calcData.anyCosts;
+        calcData.ebitda = calcData.priceWithoutSPP - calcData.resultWBCosts - calcData.costPrice;
         calcData.taxBase = taxBase({
             priceWithSPPandWallet: calcData.priceWithSPPandWallet,
             taxRate: Number(state.taxRate),
@@ -148,9 +136,11 @@ export default function Main() {
             taxVAT: Number(state.taxVAT)
         });
         calcData.tax = calcData.taxBase + calcData.taxVAT;
-        calcData.earningsNoTax = earningsNoTax({
-            ebitda: calcData.ebitda,
-            tax: calcData.tax
+        calcData.profit = profit({
+            priceWithoutSPP: calcData.priceWithoutSPP,
+            resultWBCosts: calcData.resultWBCosts,
+            tax: calcData.tax,
+            costPrice: calcData.costPrice
         });
 
         setCalcValue(calcData);
@@ -643,7 +633,7 @@ export default function Main() {
                             color: (theme) => theme.palette.primary.light
                         }}
                     />
-                    <CardContent sx={{ paddingTop: 0, paddingLeft: '4px', paddingRight: '4px', paddingBottom: '0!important' }}>
+                    <CardContent sx={{ pt: 0, pl: 1, pr: 1, pb: '8px!important' }}>
                         <TableContainer>
                             <Table aria-label="results table">
                                 <TableBody>
@@ -668,21 +658,23 @@ export default function Main() {
                                         }}
                                     />
                                     <TableRowCustom
-                                        key="deliveryCosts"
+                                        key="delivery"
                                         row={{
                                             name: 'Логистика',
-                                            value: stateCalc.deliveryCosts,
-                                            percentage: (stateCalc.deliveryCosts / stateCalc.priceWithoutSPP) * 100,
+                                            value: stateCalc.delivery,
+                                            percentage: (stateCalc.delivery / stateCalc.priceWithoutSPP) * 100,
                                             details: [
                                                 {
-                                                    key: 'deliveryCostsToClient',
+                                                    key: 'deliveryToClient',
                                                     name: 'Доставка к клиенту',
-                                                    value: stateCalc.deliveryCostsToClient
+                                                    value: stateCalc.deliveryToClient,
+                                                    percentage: (stateCalc.deliveryToClient / stateCalc.priceWithoutSPP) * 100
                                                 },
                                                 {
-                                                    key: 'deliveryCostsToWarehouse',
+                                                    key: 'deliveryToWarehouse',
                                                     name: 'Обратная логистика',
-                                                    value: stateCalc.deliveryCostsToWarehouse
+                                                    value: stateCalc.deliveryToWarehouse,
+                                                    percentage: (stateCalc.deliveryToWarehouse / stateCalc.priceWithoutSPP) * 100
                                                 }
                                             ]
                                         }}
@@ -729,39 +721,24 @@ export default function Main() {
                                                 {
                                                     key: 'taxVAT',
                                                     name: 'НДС',
-                                                    value: stateCalc.taxVAT
+                                                    value: stateCalc.taxVAT,
+                                                    percentage: (stateCalc.taxVAT / stateCalc.priceWithoutSPP) * 100
                                                 },
                                                 {
                                                     key: 'taxBase',
                                                     name: 'УСН',
-                                                    value: stateCalc.taxBase
+                                                    value: stateCalc.taxBase,
+                                                    percentage: (stateCalc.taxBase / stateCalc.priceWithoutSPP) * 100
                                                 }
                                             ]
                                         }}
                                     />
                                     <TableRowCustom
-                                        key="earningsNoTax"
+                                        key="profit"
                                         row={{
                                             name: 'Прибыль',
-                                            value: stateCalc.earningsNoTax,
-                                            percentage: (stateCalc.earningsNoTax / stateCalc.priceWithoutSPP) * 100,
-                                            details: [
-                                                {
-                                                    key: 'earningsDirty',
-                                                    name: 'Выручка за вычетом удержаний WB',
-                                                    value: stateCalc.earningsDirty
-                                                },
-                                                {
-                                                    key: 'earningsNoDelivery',
-                                                    name: 'Выручка за вычетом логистики',
-                                                    value: stateCalc.earningsNoDelivery
-                                                },
-                                                {
-                                                    key: 'ebitda',
-                                                    name: 'Валовая прибыль до вычета налогов (EBITDA)',
-                                                    value: stateCalc.ebitda
-                                                }
-                                            ]
+                                            value: stateCalc.profit,
+                                            percentage: (stateCalc.profit / stateCalc.priceWithoutSPP) * 100
                                         }}
                                     />
                                 </TableBody>

@@ -1,4 +1,4 @@
-import PropTypes, { func } from 'prop-types';
+import PropTypes from 'prop-types';
 import { round } from '../common/functions';
 
 export function logisticsTariffFirst(volume) {
@@ -21,7 +21,7 @@ export function logisticsTariffAdd(volume) {
     return volume >= 1 ? 14 : 0;
 }
 
-export function deliveryCostsToWarehouse(data) {
+export function deliveryToWarehouse(data) {
     const tariffFirst = logisticsTariffFirst(data.volume);
     if (data.volume <= 1) {
         return tariffFirst;
@@ -30,25 +30,25 @@ export function deliveryCostsToWarehouse(data) {
     return round(tariffFirst + (data.volume - 1) * tariffAdd);
 }
 
-export function deliveryCostsToClient(data) {
+export function deliveryToClient(data) {
     return round(
-        deliveryCostsToWarehouse(data) * (data.coeffWarehouse / 100) * data.indLocal + data.priceWithoutSPP * (data.indDistribSales / 100)
+        deliveryToWarehouse(data) * (data.coeffWarehouse / 100) * data.indLocal + data.priceWithoutSPP * (data.indDistribSales / 100)
     );
 }
 
-export default function deliveryCosts(data) {
-    const redemption = 1 - data.redemption / 100;
-    const logisticsCostsToWarehouse = deliveryCostsToWarehouse(data);
-    const logisticsCostsToClient = deliveryCostsToClient(data);
-    const result = logisticsCostsToWarehouse / redemption - logisticsCostsToWarehouse + logisticsCostsToClient / redemption;
+export default function delivery(data) {
+    const redemption = data.redemption / 100;
+    const logisticsCostsToWarehouse = deliveryToWarehouse(data);
+    const logisticsCostsToClient = deliveryToClient(data);
+    const result = (logisticsCostsToClient + logisticsCostsToWarehouse) / redemption - logisticsCostsToWarehouse;
     return round(result);
 }
 
-deliveryCostsToWarehouse.PropTypes = {
+deliveryToWarehouse.PropTypes = {
     volume: PropTypes.number
 };
 
-deliveryCostsToClient.PropTypes = {
+deliveryToClient.PropTypes = {
     volume: PropTypes.number,
     coeffWarehouse: PropTypes.number,
     indLocal: PropTypes.number,
@@ -56,7 +56,7 @@ deliveryCostsToClient.PropTypes = {
     indDistribSales: PropTypes.number
 };
 
-deliveryCosts.PropTypes = {
+delivery.PropTypes = {
     priceWithoutSPP: PropTypes.number,
     coeffWarehouse: PropTypes.number,
     indLocal: PropTypes.number,

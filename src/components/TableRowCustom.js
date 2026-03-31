@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { useTheme } from '@mui/material/styles';
 import PropTypes from 'prop-types';
 import Box from '@mui/material/Box';
 import IconButton from '@mui/material/IconButton';
@@ -9,66 +10,80 @@ import TableCell from '@mui/material/TableCell';
 import TableRow from '@mui/material/TableRow';
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
 import KeyboardArrowUpIcon from '@mui/icons-material/KeyboardArrowUp';
+import Typography from '@mui/material/Typography';
 
-import { TextFieldCustomMoney } from './TextFieldCustomMoney';
-import { TextFieldCustomPercentage } from './TextFieldCustomPercentage';
 import { round } from '../common/functions';
 
 export default function TableRowCustom(props) {
+    const theme = useTheme();
     const { row } = props;
     const [open, setOpen] = useState(false);
 
     return (
         <React.Fragment>
             <TableRow>
-                <TableCell component="th" scope="row" sx={{ paddingLeft: row.details ? 0 : '28px', borderBottom: 0 }}>
+                <TableCell sx={{ p: 1, pl: row.details ? 0 : 4, pr: 0, borderBottom: 0 }}>
                     {row.details ? (
                         <IconButton aria-label="row" size="small" onClick={() => setOpen(!open)}>
                             {open ? <KeyboardArrowUpIcon /> : <KeyboardArrowDownIcon />}
                         </IconButton>
                     ) : null}
-                    {row.name}
+                    <Typography variant="body1" sx={{ pl: 1, display: 'inline-flex' }}>
+                        {row.name}
+                    </Typography>
                 </TableCell>
-                <TableCell sx={{ borderBottom: 0, paddingRight: 0 }}>
-                    <TextFieldCustomMoney value={row.value == '' ? '' : round(row.value)} variant="standard" />
+                <TableCell sx={{ fontStyle: 'bold', borderBottom: 0, p: 1, pl: 0, pr: 0 }}>
+                    <Typography variant="body1" sx={{ textAlign: 'right' }}>
+                        {row.value == '' ? '' : `${round(row.value)} ₽`}
+                    </Typography>
                 </TableCell>
-                <TableCell sx={{ borderBottom: 0, paddingRight: '16px', paddingLeft: 0 }}>
-                    <TextFieldCustomPercentage value={row.percentage == '' ? '' : round(row.percentage)} variant="standard" />
+                <TableCell sx={{ borderBottom: 0, p: 1, pl: 2, pr: 2 }}>
+                    <Typography variant="body2" sx={{ fontStyle: 'italic', textAlign: 'right', color: theme.palette.secondary.main }}>
+                        {row.percentage == '' ? '' : `${round(row.percentage)} %`}
+                    </Typography>
                 </TableCell>
             </TableRow>
             {row.details ? (
                 <TableRow>
-                    <TableCell sx={{ paddingBottom: 0, paddingTop: 0, borderBottom: 0 }} colSpan={6}>
+                    <TableCell sx={{ p: 0, borderBottom: 0 }} colSpan={3}>
                         <Collapse in={open} timeout="auto" unmountOnExit>
-                            <Box sx={{ margin: 1 }}>
-                                <Table size="small" aria-label="details">
-                                    <TableBody>
-                                        {row.details.map((rowDetails) => (
-                                            <TableRow key={rowDetails.name}>
-                                                <TableCell
-                                                    component="th"
-                                                    scope="row"
+                            <Table size="small" aria-label="details">
+                                <TableBody>
+                                    {row.details.map((rowDetails) => (
+                                        <TableRow key={rowDetails.name}>
+                                            <TableCell
+                                                sx={{
+                                                    pl: 7,
+                                                    // paddingRight: '60px',
+                                                    // textAlign: 'right',
+                                                    // width: '100%',
+                                                    borderBottom: 0,
+                                                    fontStyle: 'italic'
+                                                }}
+                                            >
+                                                - {rowDetails.name}
+                                            </TableCell>
+                                            <TableCell sx={{ borderBottom: 0, p: 1, pl: 0, pr: 0 }}>
+                                                <Typography variant="body1" sx={{ textAlign: 'right' }}>
+                                                    {rowDetails.value == '' ? '' : `${round(rowDetails.value)} ₽`}
+                                                </Typography>
+                                            </TableCell>
+                                            <TableCell sx={{ borderBottom: 0, p: 1, pl: 2 }}>
+                                                <Typography
+                                                    variant="body2"
                                                     sx={{
-                                                        paddingLeft: '8px',
+                                                        fontStyle: 'italic',
                                                         textAlign: 'right',
-                                                        width: '50%',
-                                                        borderBottom: 0,
-                                                        fontStyle: 'italic'
+                                                        color: theme.palette.secondary.main
                                                     }}
                                                 >
-                                                    {rowDetails.name}
-                                                </TableCell>
-                                                <TableCell sx={{ borderBottom: 0 }}>
-                                                    <TextFieldCustomMoney
-                                                        value={rowDetails.value == '' ? '' : round(rowDetails.value)}
-                                                        variant="standard"
-                                                    />
-                                                </TableCell>
-                                            </TableRow>
-                                        ))}
-                                    </TableBody>
-                                </Table>
-                            </Box>
+                                                    {rowDetails.percentage == '' ? '' : `${round(rowDetails.percentage)} %`}
+                                                </Typography>
+                                            </TableCell>
+                                        </TableRow>
+                                    ))}
+                                </TableBody>
+                            </Table>
                         </Collapse>
                     </TableCell>
                 </TableRow>

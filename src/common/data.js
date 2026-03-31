@@ -22,7 +22,7 @@ export const initInputData = {
     wallet: 5,
     coeffWarehouse: 200,
     price: 1000,
-    costPrice: 500,
+    costPrice: 100,
     volume: 5,
     length: '',
     width: '',
@@ -33,6 +33,7 @@ export const initInputData = {
 };
 
 export const initCalculatedData = {
+    costPrice: 0,
     priceWithoutSPP: 0,
     priceWithSPP: 0,
     priceWithSPPandWallet: 0,
@@ -40,10 +41,10 @@ export const initCalculatedData = {
     equiring: 0,
     anyCosts: 0,
     reward: 0,
-    deliveryCosts: 0,
-    deliveryCostsToClient: 0,
-    deliveryCostsToWarehouse: 0,
-    earningsDirty: 0,
+    delivery: 0,
+    deliveryToClient: 0,
+    deliveryToWarehouse: 0,
+    profit: 0,
     earningsNoDelivery: 0,
     earningsNoTax: 0,
     ebitda: 0,

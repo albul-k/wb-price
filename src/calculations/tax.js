@@ -11,11 +11,13 @@ export function taxVAT(data) {
 
 export function taxBase(data) {
     const taxRate = data.taxRate / 100;
-    const taxBase = data.taxType === 'type_2' ? data.ebitda : data.priceWithSPPandWallet;
-    if (taxBase < 0) {
-        return 0;
+    if (data.taxType === 'type_2') {
+        const tax_1 = data.priceWithSPPandWallet * 0.01;
+        const tax_2 = data.ebitda * taxRate;
+        return data.priceWithSPPandWallet * 0.01 > data.ebitda * taxRate ? round(tax_1) : round(tax_2);
+    } else {
+        return round((data.priceWithSPPandWallet - taxVAT(data)) * taxRate);
     }
-    return round((taxBase - taxVAT(data)) * taxRate);
 }
 
 tax.PropTypes = {
