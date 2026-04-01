@@ -23,6 +23,7 @@ export const MoneyFormatInput = forwardRef(function MoneyFormatInput(props, ref)
                     }
                 });
             }}
+            isAllowed={({ value = 0 }) => value <= 100000000}
             allowNegative={false}
             thousandSeparator
             isNumericString

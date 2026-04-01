@@ -24,6 +24,7 @@ import Table from '@mui/material/Table';
 import TableBody from '@mui/material/TableBody';
 import TableContainer from '@mui/material/TableContainer';
 import TableRowCustom from '../components/TableRowCustom';
+import TableFooter from '@mui/material/TableFooter';
 import { GridCustom } from '../components/GridCustom';
 import { CardCustom } from '../components/CardCustom';
 import { MoneyFormatInput, PercentFormat, PercentFormatAny } from '../common/formats';
@@ -626,20 +627,33 @@ export default function Main() {
                     <CardHeader
                         title="Результат"
                         sx={{
-                            marginBottom: 0,
+                            mb: 0,
                             // paddingBottom: 0,
-                            paddingLeft: '30px',
+                            // pl: 4,
                             backgroundColor: (theme) => theme.palette.primary.main,
                             color: (theme) => theme.palette.primary.light
                         }}
                     />
-                    <CardContent sx={{ pt: 0, pl: 1, pr: 1, pb: '8px!important' }}>
+                    <CardContent sx={{ p: 0, pb: '0px!important' }}>
                         <TableContainer>
                             <Table aria-label="results table">
                                 <TableBody>
                                     <TableRowCustom
                                         key="priceWithoutSPP"
-                                        row={{ name: 'Цена до СПП', value: stateCalc.priceWithoutSPP, percentage: 100 }}
+                                        row={{
+                                            name: 'Цена до СПП',
+                                            value: stateCalc.priceWithoutSPP,
+                                            percentage: 100,
+                                            fontWeight: 'bolder',
+                                            details: [
+                                                {
+                                                    key: 'priceWithSPPandWallet',
+                                                    name: 'Цена с СПП и кошельком',
+                                                    value: stateCalc.priceWithSPPandWallet,
+                                                    percentage: (stateCalc.priceWithSPPandWallet / stateCalc.priceWithoutSPP) * 100
+                                                }
+                                            ]
+                                        }}
                                     />
                                     <TableRowCustom
                                         key="reward"
@@ -647,14 +661,6 @@ export default function Main() {
                                             name: 'Вознаграждение (вкл. доп. комиссию)',
                                             value: stateCalc.reward,
                                             percentage: (stateCalc.reward / stateCalc.priceWithoutSPP) * 100
-                                        }}
-                                    />
-                                    <TableRowCustom
-                                        key="priceWithSPP"
-                                        row={{
-                                            name: 'Цена с СПП и кошельком',
-                                            value: stateCalc.priceWithSPPandWallet,
-                                            percentage: (stateCalc.priceWithSPPandWallet / stateCalc.priceWithoutSPP) * 100
                                         }}
                                     />
                                     <TableRowCustom
@@ -708,7 +714,16 @@ export default function Main() {
                                         row={{
                                             name: 'Итого удержания WB',
                                             value: stateCalc.resultWBCosts,
-                                            percentage: (stateCalc.resultWBCosts / stateCalc.priceWithoutSPP) * 100
+                                            percentage: (stateCalc.resultWBCosts / stateCalc.priceWithoutSPP) * 100,
+                                            fontWeight: 'bolder'
+                                        }}
+                                    />
+                                    <TableRowCustom
+                                        key="costPrice"
+                                        row={{
+                                            name: 'Себестоимость',
+                                            value: stateCalc.costPrice,
+                                            percentage: (stateCalc.costPrice / stateCalc.priceWithoutSPP) * 100
                                         }}
                                     />
                                     <TableRowCustom
@@ -733,15 +748,24 @@ export default function Main() {
                                             ]
                                         }}
                                     />
+                                </TableBody>
+                                <TableFooter
+                                    sx={{
+                                        borderTop: (theme) => `2px solid ${theme.palette.primary.main}`,
+                                        backgroundColor: (theme) => theme.palette.secondary.light
+                                    }}
+                                >
                                     <TableRowCustom
                                         key="profit"
                                         row={{
                                             name: 'Прибыль',
                                             value: stateCalc.profit,
-                                            percentage: (stateCalc.profit / stateCalc.priceWithoutSPP) * 100
+                                            percentage: (stateCalc.profit / stateCalc.priceWithoutSPP) * 100,
+                                            fontWeight: 'bolder',
+                                            color: 'black'
                                         }}
                                     />
-                                </TableBody>
+                                </TableFooter>
                             </Table>
                         </TableContainer>
                     </CardContent>
