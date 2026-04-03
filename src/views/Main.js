@@ -244,7 +244,20 @@ export default function Main() {
                                     value={state.rewardAdd}
                                     label="Дополнительная комиссия, %"
                                     InputProps={{
-                                        inputComponent: PercentFormat
+                                        inputComponent: PercentFormat,
+                                        endAdornment: (
+                                            <InputAdornment position="end">
+                                                <Tooltip title="Дополнительная комиссия может быть при использовании опций конструктора">
+                                                    <HelpOutlineIcon
+                                                        sx={{
+                                                            color: 'action.active',
+                                                            marginRight: (theme) => theme.spacing(1),
+                                                            marginY: (theme) => theme.spacing(0.5)
+                                                        }}
+                                                    />
+                                                </Tooltip>
+                                            </InputAdornment>
+                                        )
                                     }}
                                     onChange={handleInputChange}
                                 />
@@ -504,7 +517,20 @@ export default function Main() {
                                     value={state.coeffWarehouse}
                                     label="Коэффициент склада, %"
                                     InputProps={{
-                                        inputComponent: PercentFormatAny
+                                        inputComponent: PercentFormatAny,
+                                        endAdornment: (
+                                            <InputAdornment position="end">
+                                                <Tooltip title="Коэффициент склада можно посмотреть в Поставки и заказы - Тарифы">
+                                                    <HelpOutlineIcon
+                                                        sx={{
+                                                            color: 'action.active',
+                                                            marginRight: (theme) => theme.spacing(1),
+                                                            marginY: (theme) => theme.spacing(0.5)
+                                                        }}
+                                                    />
+                                                </Tooltip>
+                                            </InputAdornment>
+                                        )
                                     }}
                                     onChange={handleInputChange}
                                 />
@@ -515,6 +541,29 @@ export default function Main() {
                                     value={state.indLocal}
                                     label="ИЛ"
                                     type="number"
+                                    InputProps={{
+                                        endAdornment: (
+                                            <InputAdornment position="end">
+                                                <Tooltip
+                                                    title={
+                                                        <React.Fragment>
+                                                            {'ИЛ (Индекс локализации)'}
+                                                            <br />
+                                                            {'можно посмотреть в Поставки и заказы - Тарифы'}
+                                                        </React.Fragment>
+                                                    }
+                                                >
+                                                    <HelpOutlineIcon
+                                                        sx={{
+                                                            color: 'action.active',
+                                                            marginRight: (theme) => theme.spacing(1),
+                                                            marginY: (theme) => theme.spacing(0.5)
+                                                        }}
+                                                    />
+                                                </Tooltip>
+                                            </InputAdornment>
+                                        )
+                                    }}
                                     onChange={handleInputChange}
                                 />
                             </Grid>
@@ -524,7 +573,28 @@ export default function Main() {
                                     value={state.indDistribSales}
                                     label="ИРП, %"
                                     InputProps={{
-                                        inputComponent: PercentFormatAny
+                                        inputComponent: PercentFormatAny,
+                                        endAdornment: (
+                                            <InputAdornment position="end">
+                                                <Tooltip
+                                                    title={
+                                                        <React.Fragment>
+                                                            {'ИРП (Индекс распределения продаж)'}
+                                                            <br />
+                                                            {'можно посмотреть в Поставки и заказы - Тарифы'}
+                                                        </React.Fragment>
+                                                    }
+                                                >
+                                                    <HelpOutlineIcon
+                                                        sx={{
+                                                            color: 'action.active',
+                                                            marginRight: (theme) => theme.spacing(1),
+                                                            marginY: (theme) => theme.spacing(0.5)
+                                                        }}
+                                                    />
+                                                </Tooltip>
+                                            </InputAdornment>
+                                        )
                                     }}
                                     onChange={handleInputChange}
                                 />
