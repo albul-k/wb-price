@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
 import { useTheme } from '@mui/material/styles';
 import PropTypes from 'prop-types';
-import Box from '@mui/material/Box';
 import IconButton from '@mui/material/IconButton';
 import Collapse from '@mui/material/Collapse';
 import Table from '@mui/material/Table';
@@ -30,23 +29,23 @@ export default function TableRowCustom(props) {
                         </IconButton>
                     ) : null}
                     <Typography
-                        variant="body1"
                         sx={{
                             pl: 1,
                             display: 'inline-flex',
-                            fontWeight: () => (row.fontWeight ? row.fontWeight : 'normal'),
+                            fontSize: 12,
+                            fontWeight: () => (row.fontWeight ? row.fontWeight : 'inherit'),
                             color: () => (row.color ? row.color : 'inherit')
                         }}
                     >
                         {row.name}
                     </Typography>
                 </TableCell>
-                <TableCell sx={{ borderBottom: 0, p: 1, pl: 0, pr: 0 }}>
+                <TableCell sx={{ borderBottom: 0, p: 1, pl: 0, pr: 0, width: '100px' }}>
                     <Typography
-                        variant="body1"
                         sx={{
                             textAlign: 'right',
                             width: '100px',
+                            fontSize: 12,
                             fontWeight: () => (row.fontWeight ? row.fontWeight : 'normal'),
                             color: () => (row.color ? row.color : 'inherit')
                         }}
@@ -54,15 +53,13 @@ export default function TableRowCustom(props) {
                         {row.value == '' ? '' : `${round(row.value, 0, true)} ₽`}
                     </Typography>
                 </TableCell>
-                <TableCell sx={{ borderBottom: 0, p: 1, pl: 2, pr: 2 }}>
+                <TableCell sx={{ borderBottom: 0, p: 1, pl: 2, pr: 2, width: '90px' }}>
                     <Tooltip title="% от цены до СПП" placement="bottom">
                         <Typography
-                            variant="body2"
                             sx={{
                                 fontStyle: 'italic',
+                                fontSize: 12,
                                 textAlign: 'right',
-                                color: theme.palette.secondary.main,
-                                width: '48px',
                                 fontWeight: () => (row.fontWeight ? row.fontWeight : 'normal'),
                                 color: () => (row.color ? row.color : 'inherit')
                             }}
@@ -84,27 +81,31 @@ export default function TableRowCustom(props) {
                                                 sx={{
                                                     p: 0,
                                                     pl: 7,
-                                                    // paddingRight: '60px',
-                                                    // textAlign: 'right',
-                                                    // width: '100%',
                                                     borderBottom: 0,
-                                                    fontStyle: 'italic'
+                                                    fontStyle: 'italic',
+                                                    fontSize: 12
                                                 }}
                                             >
                                                 {rowDetails.name}
                                             </TableCell>
                                             <TableCell sx={{ borderBottom: 0, p: 1, pl: 0, pr: 0, width: '100px' }}>
-                                                <Typography variant="body1" sx={{ textAlign: 'right' }}>
+                                                <Typography
+                                                    sx={{
+                                                        fontSize: 12,
+                                                        textAlign: 'right',
+                                                        color: () => (row.color ? row.color : 'inherit')
+                                                    }}
+                                                >
                                                     {rowDetails.value == '' ? '' : `${round(rowDetails.value, 0, true)} ₽`}
                                                 </Typography>
                                             </TableCell>
-                                            <TableCell sx={{ borderBottom: 0, p: 1, pl: 2, pr: 2, width: '80px' }}>
+                                            <TableCell sx={{ borderBottom: 0, p: 1, pl: 2, pr: 2, width: '90px' }}>
                                                 <Typography
-                                                    variant="body2"
                                                     sx={{
                                                         fontStyle: 'italic',
+                                                        fontSize: 12,
                                                         textAlign: 'right',
-                                                        color: theme.palette.secondary.main
+                                                        color: () => (row.color ? row.color : 'inherit')
                                                     }}
                                                 >
                                                     {rowDetails.percentage == '' ? '' : `${round(rowDetails.percentage, 1)} %`}

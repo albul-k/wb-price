@@ -6,18 +6,24 @@ export default function tax(data) {
 }
 
 export function taxVAT(data) {
-    return round(data.priceWithSPPandWallet * (data.taxVAT / (100 + data.taxVAT)));
+    return round(data.priceWithSPPandWallet * getVATvalue(data.taxVAT));
 }
 
 export function taxBase(data) {
+    const taxVATvalue = taxVAT(data);
     const taxRate = data.taxRate / 100;
     if (data.taxType === 'type_2') {
-        const tax_1 = data.priceWithSPPandWallet * 0.01;
-        const tax_2 = data.ebitda * taxRate;
-        return data.priceWithSPPandWallet * 0.01 > data.ebitda * taxRate ? round(tax_1) : round(tax_2);
+        const taxBase = data.priceWithoutSPP - data.resultWBCosts - data.costPrice - taxVATvalue;
+        const tax_1 = taxBase * (data.taxRate / 100);
+        const tax_2 = (data.priceWithSPPandWallet - taxVATvalue) * 0.01;
+        return tax_1 > tax_2 ? round(tax_1) : round(tax_2);
     } else {
-        return round((data.priceWithSPPandWallet - taxVAT(data)) * taxRate);
+        return round((data.priceWithSPPandWallet - taxVATvalue) * taxRate);
     }
+}
+
+export function getVATvalue(taxVAT) {
+    return taxVAT / (100 + taxVAT);
 }
 
 tax.PropTypes = {
@@ -37,6 +43,9 @@ taxBase.PropTypes = {
     taxRate: PropTypes.number,
     taxType: PropTypes.string,
     taxVAT: PropTypes.number,
+    priceWithoutSPP: PropTypes.number,
     priceWithSPPandWallet: PropTypes.number,
-    ebitda: PropTypes.number
+    ebitda: PropTypes.number,
+    resultWBCosts: PropTypes.number,
+    costPrice: PropTypes.number
 };

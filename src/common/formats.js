@@ -106,3 +106,28 @@ export const PercentFormatAny = forwardRef(function PercentFormat(props, ref) {
         />
     );
 });
+
+export const IndLocalFormatInput = forwardRef(function MoneyFormatInput(props, ref) {
+    // eslint-disable-next-line react/prop-types
+    const { onChange, ...other } = props;
+
+    return (
+        <NumberFormat
+            {...other}
+            getInputRef={ref}
+            onValueChange={(values) => {
+                onChange({
+                    target: {
+                        // eslint-disable-next-line react/prop-types
+                        name: props.name,
+                        value: values.value
+                    }
+                });
+            }}
+            isAllowed={({ value = 0 }) => value <= 2}
+            allowNegative={false}
+            // thousandSeparator
+            isNumericString
+        />
+    );
+});

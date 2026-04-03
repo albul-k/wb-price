@@ -23,8 +23,9 @@ import FormLabel from '@mui/material/FormLabel';
 import Table from '@mui/material/Table';
 import TableBody from '@mui/material/TableBody';
 import TableContainer from '@mui/material/TableContainer';
-import TableRowCustom from '../components/TableRowCustom';
 import TableFooter from '@mui/material/TableFooter';
+
+import TableRowCustom from '../components/TableRowCustom';
 import { GridCustom } from '../components/GridCustom';
 import { CardCustom } from '../components/CardCustom';
 import { MoneyFormatInput, PercentFormat, PercentFormatAny } from '../common/formats';
@@ -126,7 +127,10 @@ export default function Main() {
         calcData.resultWBCosts = calcData.reward + calcData.delivery + calcData.advert + calcData.equiring + calcData.anyCosts;
         calcData.ebitda = calcData.priceWithoutSPP - calcData.resultWBCosts - calcData.costPrice;
         calcData.taxBase = taxBase({
+            priceWithoutSPP: calcData.priceWithoutSPP,
             priceWithSPPandWallet: calcData.priceWithSPPandWallet,
+            resultWBCosts: calcData.resultWBCosts,
+            costPrice: calcData.costPrice,
             taxRate: Number(state.taxRate),
             taxType: state.taxType,
             taxVAT: Number(state.taxVAT),
@@ -302,7 +306,7 @@ export default function Main() {
                                         inputComponent: PercentFormatAny,
                                         endAdornment: (
                                             <InputAdornment position="end">
-                                                <Tooltip title="Эквайринг от цены до СПП, %">
+                                                <Tooltip title="Эквайринг от цены с СПП и кошельком, %">
                                                     <HelpOutlineIcon
                                                         sx={{
                                                             color: 'action.active',
@@ -628,8 +632,6 @@ export default function Main() {
                         title="Результат"
                         sx={{
                             mb: 0,
-                            // paddingBottom: 0,
-                            // pl: 4,
                             backgroundColor: (theme) => theme.palette.primary.main,
                             color: (theme) => theme.palette.primary.light
                         }}
